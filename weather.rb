@@ -1,11 +1,25 @@
-Require 'barometer'
+require 'barometer'
 
-def get_location(location)
-  Barometer.new(location).measure
+def get_locations_weather(location)
+	@barometer = Barometer.new(location).measure
 end
 
-weather = get_locations_weather('Chicago')
+puts "Where are you? Enter a zipcode"
+location = gets.chomp.downcase
+weather = get_locations_weather (location)
+
+puts "Your current weather is " + weather.current.condition + " with the temperature of " + weather.current.temperature.f.to_s + "F.\n\n"
+
+tomorrow = Time.now.strftime('%d').to_i + 1
 
 weather.forecast.each do |forecast|
- puts forecast.starts_at.month.to_s + '/' + forecast.starts_at.day.to_s + ' is going to be ' + forecast.icon + ' with a low of ' + forecast.low.f.to_s + ' and a high of ' + forecast.high.f.to_s
+	day = forecast.starts_at.day
+
+	if day == tomorrow
+		dayName = "Tomorrow"
+	else
+		dayName = forecast.starts_at.strftime('%A')
+	end
+
+	puts dayName +" is going to be " + forecast.icon + " with a low of " + forecast.low.f.to_s + "F and a high of " + forecast.high.f.to_s + "F."
 end
